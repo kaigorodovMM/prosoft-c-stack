@@ -36,6 +36,9 @@ hstack_t stack_new(void)
     if (g_table.entries == NULL) 
     {
         g_table.entries = malloc(10 * sizeof(stack_entry_t*));
+        if (g_table.entries == NULL) { //проверка malloc
+            return -1;
+        }
         for (size_t i = 0; i < 10; ++i) {
             (&g_table.entries)[i] = NULL;
         }
@@ -51,6 +54,9 @@ hstack_t stack_new(void)
             if ((&g_table.entries)[i] != NULL)
             {
                 (&g_table.entries)[i] = malloc(sizeof(stack_entry_t));
+                if ((&g_table.entries)[i] == NULL) { //проверка malloc
+                    return -1;
+                }
                 (&g_table.entries)[i]->reserved = 0;
                 (&g_table.entries)[i]->stack = NULL;
                 g_table.entries++;
@@ -103,13 +109,17 @@ void stack_push(const hstack_t hstack, const void* data_in, const unsigned int s
     UNUSED(data_in);
     UNUSED(size);
     if (stack_valid_handler(hstack) == 0 && data_in != NULL && size != 0) {
-        (&g_table.entries)[hstack]->reserved += 1;
+        
         stack_t new_st = malloc(sizeof(stack_t) + size);
-        new_st->size = size;
-        memcpy(data_in, new_st->data, size);
-        new_st->prev = (&g_table.entries)[hstack]->stack;
-        (&g_table.entries)[hstack]->reserved++;
-        (&g_table.entries)[hstack]->stack = new_st;
+        if (new_st != NULL) { // поверка malloc
+            (&g_table.entries)[hstack]->reserved += 1;
+            new_st->size = size;
+            memcpy(data_in, new_st->data, size);
+            new_st->prev = (&g_table.entries)[hstack]->stack;
+            (&g_table.entries)[hstack]->reserved++;
+            (&g_table.entries)[hstack]->stack = new_st;
+        }
+        
     }
 }
 
