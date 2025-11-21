@@ -121,7 +121,7 @@ unsigned int stack_pop(const hstack_t hstack, void* data_out, const unsigned int
     UNUSED(hstack);
     UNUSED(data_out);
     UNUSED(size);
-    if (stack_valid_handler(hstack) == 0 && data_out != NULL && size != 0 && size == g_table.entries[hstack].stack->size) {
+    if (stack_valid_handler(hstack) == 0 && g_table.entries[hstack].reserved != 0 && data_out != NULL && size != 0 && size == g_table.entries[hstack].stack->size) {
         memcpy(data_out, g_table.entries[hstack].stack->data, size);
         stack_t del = g_table.entries[hstack].stack;
         g_table.entries[hstack].stack = (stack_t)g_table.entries[hstack].stack->prev;
