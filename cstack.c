@@ -62,6 +62,7 @@ hstack_t stack_new(void)
             }
         }
     }
+    return -1;
 }
 
 void stack_free(const hstack_t hstack)
