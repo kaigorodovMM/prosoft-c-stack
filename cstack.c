@@ -33,12 +33,13 @@ hstack_t stack_new(void)
 {
     if (g_table.entries == NULL) 
     {
-        g_table.entries = malloc(10 * sizeof(stack_entry_t*));
+        g_table.entries = malloc(10 * sizeof(stack_entry_t));
         if (g_table.entries == NULL) { //проверка malloc
             return -1;
         }
         for (size_t i = 0; i < 10; ++i) {
-            (&g_table.entries)[i] = NULL;
+            g_table.entries[i].reserved = 0;
+            g_table.entries[i].stack = NULL;
         }
     }
     if (g_table.size == 10) 
