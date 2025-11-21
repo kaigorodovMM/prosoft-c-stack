@@ -95,11 +95,11 @@ unsigned int stack_size(const hstack_t hstack)
     UNUSED(hstack);
     if (stack_valid_handler(hstack) == 0) {
         if (g_table.entries[hstack].reserved == -1) {
-            return 0;
+            return 0u;
         }
         return g_table.entries[hstack].reserved;
     }
-    return 0;
+    return 0u;
 }
 
 void stack_push(const hstack_t hstack, const void* data_in, const unsigned int size)
