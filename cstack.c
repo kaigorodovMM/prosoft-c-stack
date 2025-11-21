@@ -74,20 +74,15 @@ void stack_free(const hstack_t hstack)
         }
         g_table.entries[hstack].stack = NULL;
         g_table.entries[hstack].reserved = -1;
+        g_table.size--;
     }
 }
 
 int stack_valid_handler(const hstack_t hstack)
 {
     UNUSED(hstack);
-    for (hstack_t i = 0; i < 10; ++i)
-    {
-        if (g_table.entries != NULL && g_table.entries[i].reserved != -1)
-        {
-            if (i == hstack) {
-                return 0;
-            }
-        }
+    if (g_table.entries != NULL && hstack >= 0 && hstack < 10 && g_table.entries[hstack].reserved != -1) {
+        return 0;
     }
     return 1;
 }
@@ -108,11 +103,11 @@ void stack_push(const hstack_t hstack, const void* data_in, const unsigned int s
     UNUSED(size);
     if (stack_valid_handler(hstack) == 0 && data_in != NULL && size != 0) {
         
-        stack_t new_st = malloc(sizeof(stack_t) + size);
+        stack_t new_st = malloc(sizeof(struct node) + size);
         if (new_st != NULL) { // поверка malloc
             //g_table.entries[hstack].reserved += 1;
             new_st->size = size;
-            memcpy((void* )data_in, new_st->data, size);
+            memcpy(new_st->data, (void* )data_in, size);
             new_st->prev = g_table.entries[hstack].stack;
             g_table.entries[hstack].reserved++;
             g_table.entries[hstack].stack = new_st;
@@ -127,7 +122,7 @@ unsigned int stack_pop(const hstack_t hstack, void* data_out, const unsigned int
     UNUSED(data_out);
     UNUSED(size);
     if (stack_valid_handler(hstack) == 0 && data_out != NULL && size != 0) {
-        memcpy(g_table.entries[hstack].stack->data, data_out, size);
+        memcpy(data_out, g_table.entries[hstack].stack->data, size);
         stack_t del = g_table.entries[hstack].stack;
         g_table.entries[hstack].stack = (stack_t)g_table.entries[hstack].stack->prev;
         g_table.entries[hstack].reserved--;
