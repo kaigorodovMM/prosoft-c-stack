@@ -97,7 +97,7 @@ unsigned int stack_size(const hstack_t hstack)
         if (g_table.entries[hstack].reserved == -1) {
             return 0u;
         }
-        return g_table.entries[hstack].reserved;
+        return (unsigned int)g_table.entries[hstack].reserved;
     }
     return 0u;
 }
