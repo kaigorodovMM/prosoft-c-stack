@@ -1,5 +1,7 @@
 #include "cstack.h"
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define UNUSED(VAR) (void)(VAR)
 
@@ -25,11 +27,7 @@ struct stack_entries_table
     unsigned int size;
     stack_entry_t* entries;
 };
-
 struct stack_entries_table g_table = { 0u, NULL};
-
-
-
 
 hstack_t stack_new(void)
 {
@@ -43,7 +41,7 @@ hstack_t stack_new(void)
             (&g_table.entries)[i] = NULL;
         }
     }
-    if (g_table.entries == 10) 
+    if (g_table.size == 10) 
     {
         return -1;
     }
@@ -70,14 +68,29 @@ void stack_free(const hstack_t hstack)
 {
     UNUSED(hstack);
     if (stack_valid_handler(hstack) == 0) {
-        while ((&g_table.entries)[hstack]->reserved != 0) {
+        /*while ((&g_table.entries)[hstack]->reserved != 0) {
             stack_t del = (&g_table.entries)[hstack]->stack;
-            (&g_table.entries)[hstack]->stack = (&g_table.entries)[hstack]->stack->prev;
+            (&g_table.entries)[hstack]->stack = (stack_t)(&g_table.entries)[hstack]->stack->prev;
+            //stack_t prev = (stack_t)((&g_table.entries)[hstack]->stack->prev);
+            //(&g_table.entries)[hstack]->stack = prev;
+
             (&g_table.entries)[hstack]->reserved--;
             free(del);
         }
         g_table.entries--;
-        (&g_table.entries)[hstack]->stack = NULL;
+        (&g_table.entries)[hstack]->stack = NULL;*/
+        stack_entry_t* entry = &g_table.entries[hstack];
+        while (entry->reserved > 0) {
+            stack_t del = entry->stack;
+
+            stack_t next = del->prev;
+
+            free(del);
+
+            entry->stack = next;
+            entry->reserved--;
+        }
+        entry->stack = NULL;
     }
 }
 
