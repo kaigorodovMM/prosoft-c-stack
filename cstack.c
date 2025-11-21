@@ -52,10 +52,6 @@ hstack_t stack_new(void)
         {
             if (g_table.entries[i].stack != NULL)
             {
-                /*(&g_table.entries)[i] = malloc(sizeof(stack_entry_t));
-                if ((&g_table.entries)[i] == NULL) { //проверка malloc
-                    return -1;
-                }*/
                 g_table.entries[i].reserved = 0;
                 g_table.entries[i].stack = NULL;
                 g_table.size++;
@@ -70,27 +66,11 @@ void stack_free(const hstack_t hstack)
 {
     UNUSED(hstack);
     if (stack_valid_handler(hstack) == 0) {
-        /*while ((&g_table.entries)[hstack]->reserved != 0) {
-            stack_t del = (&g_table.entries)[hstack]->stack;
-            (&g_table.entries)[hstack]->stack = (stack_t)(&g_table.entries)[hstack]->stack->prev;
-            //stack_t prev = (stack_t)((&g_table.entries)[hstack]->stack->prev);
-            //(&g_table.entries)[hstack]->stack = prev;
-
-            (&g_table.entries)[hstack]->reserved--;
-            free(del);
-        }
-        g_table.entries--;
-        (&g_table.entries)[hstack]->stack = NULL;*/
-        //stack_entry_t* entry = &g_table.entries[hstack];
         while (g_table.entries[hstack].reserved > 0) {
             stack_t del = g_table.entries[hstack].stack;
-
-            //stack_t next = (stack_t)del->prev;
-
-            free(del);
-
             g_table.entries[hstack].stack = (stack_t)del->prev;
             g_table.entries[hstack].reserved--;
+            free(del);
         }
         g_table.entries[hstack].stack = NULL;
         g_table.entries[hstack].reserved = -1;
