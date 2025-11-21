@@ -50,7 +50,7 @@ hstack_t stack_new(void)
     {
         for (hstack_t i = 0; i < 10; ++i)
         {
-            if (g_table.entries[i].stack != NULL)
+            if (g_table.entries[i].reserved == -1)
             {
                 g_table.entries[i].reserved = 0;
                 g_table.entries[i].stack = NULL;
@@ -82,9 +82,11 @@ int stack_valid_handler(const hstack_t hstack)
     UNUSED(hstack);
     for (hstack_t i = 0; i < 10; ++i)
     {
-        if (g_table.entries != NULL && g_table.entries[hstack].reserved != -1)
+        if (g_table.entries != NULL && g_table.entries[i].reserved != -1)
         {
-            return 0;
+            if (i == hstack) {
+                return 0;
+            }
         }
     }
     return 1;
@@ -94,9 +96,6 @@ unsigned int stack_size(const hstack_t hstack)
 {
     UNUSED(hstack);
     if (stack_valid_handler(hstack) == 0) {
-        if (g_table.entries[hstack].reserved == -1) {
-            return 0u;
-        }
         return (unsigned int)g_table.entries[hstack].reserved;
     }
     return 0u;
