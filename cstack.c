@@ -108,7 +108,7 @@ void stack_push(const hstack_t hstack, const void* data_in, const unsigned int s
         
         stack_t new_st = malloc(sizeof(stack_t) + size);
         if (new_st != NULL) { // поверка malloc
-            g_table.entries[hstack].reserved += 1;
+            //g_table.entries[hstack].reserved += 1;
             new_st->size = size;
             memcpy((void* )data_in, new_st->data, size);
             new_st->prev = g_table.entries[hstack].stack;
