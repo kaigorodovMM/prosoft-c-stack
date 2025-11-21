@@ -94,6 +94,9 @@ unsigned int stack_size(const hstack_t hstack)
 {
     UNUSED(hstack);
     if (stack_valid_handler(hstack) == 0) {
+        if (g_table.entries[hstack].reserved == -1) {
+            return 0;
+        }
         return g_table.entries[hstack].reserved;
     }
     return 0;
